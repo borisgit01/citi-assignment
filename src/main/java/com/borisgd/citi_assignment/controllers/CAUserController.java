@@ -1,6 +1,7 @@
 package com.borisgd.citi_assignment.controllers;
 
 import com.borisgd.citi_assignment.domain.CAUser;
+import com.borisgd.citi_assignment.domain.FriendActionResponse;
 import com.borisgd.citi_assignment.services.CAUserService;
 import org.springframework.web.bind.annotation.*;
 
@@ -15,9 +16,14 @@ public class CAUserController {
         this.caUserService = caUserService;
     }
 
-    @GetMapping("/test")
-    public void addUser() {
-        caUserService.addFriend(1, 2);
+    @DeleteMapping("/user/{userId}/friend/{friendId}")
+    public FriendActionResponse removeFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        return caUserService.removeFriend(userId, friendId);
+    }
+
+    @PostMapping("/user/{userId}/friend/{friendId}")
+    public FriendActionResponse addFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
+        return caUserService.addFriend(userId, friendId);
     }
 
     @GetMapping("/users")
