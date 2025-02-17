@@ -3,7 +3,8 @@ package com.borisgd.citi_assignment.domain;
 public class FriendActionResponse {
 
     public final static String ACTION_ADD = "Add";
-    public final static String ACTION_DELETE = "Delet";
+    public final static String ACTION_DELETE = "Delete";
+    public final static String ACTION_COUNT_HOPS = "Count Hops";
 
     private String action;
     private boolean success;

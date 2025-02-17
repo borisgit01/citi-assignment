@@ -16,6 +16,11 @@ public class CAUserController {
         this.caUserService = caUserService;
     }
 
+    @GetMapping("/hops/{userId1}/{userId2}")
+    public FriendActionResponse countHops(@PathVariable Integer userId1, @PathVariable Integer userId2) {
+        return caUserService.countHops(userId1, userId2);
+    }
+
     @DeleteMapping("/user/{userId}/friend/{friendId}")
     public FriendActionResponse removeFriend(@PathVariable Integer userId, @PathVariable Integer friendId) {
         return caUserService.removeFriend(userId, friendId);

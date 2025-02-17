@@ -8,8 +8,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class CAUserService {
@@ -34,12 +33,22 @@ public class CAUserService {
         caUserRepository.deleteById(id);
     }
 
+    public FriendActionResponse countHops(Integer userId1, Integer userId2) {
+        int hops = CAUserUtilities.findShortestHops(CAUserUtilities.buildGraph(getAllUsers()), userId1, userId2);
+        String message;
+        if(hops == -1) {
+            message = "Did not find any connection between user " + userId1 + " and user " + userId2;
+        } else {
+            message = "Found " + hops + " hops between user " + userId1 + " and user " + userId2;
+        }
+        return new FriendActionResponse(FriendActionResponse.ACTION_COUNT_HOPS, true, message);
+    }
+
     public FriendActionResponse removeFriend(Integer userId, Integer friendId) {
         FriendActionResponseEx response = findBoth(userId, friendId);
         if(response.isSuccess()) {
             CAUser user = response.getUser();
             CAUser friend = response.getFriend();
-            LOGGER.info("user: {}, friend: {}", user.getName(), friend.getName());
             user.getFriends().remove(friend);
             friend.getFriends().remove(user);
             caUserRepository.save(user);
@@ -56,11 +65,9 @@ public class CAUserService {
         if(response.isSuccess()) {
             CAUser user = response.getUser();
             CAUser friend = response.getFriend();
-            LOGGER.info("user: {}, friend: {}", user.getName(), friend.getName());
             user.getFriends().add(friend);
             friend.getFriends().add(user);
             caUserRepository.save(user);
-            LOGGER.info("user {} now has {} friends", user.getId(), user.getFriends().size());
             caUserRepository.save(friend);
             return new FriendActionResponse(FriendActionResponse.ACTION_ADD, true,
                     "Users are now friends");
