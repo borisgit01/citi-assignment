@@ -8,6 +8,11 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import org.jgrapht.Graph;
+import org.jgrapht.alg.clustering.LabelPropagationClustering;
+import org.jgrapht.graph.DefaultEdge;
+import org.jgrapht.graph.DefaultUndirectedGraph;
+
 import java.util.*;
 
 @Service
@@ -31,6 +36,27 @@ public class CAUserService {
 
     public void deleteById(Integer id) {
         caUserRepository.deleteById(id);
+    }
+
+    public FriendActionResponse detectCommunities() {
+        Graph<Integer, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
+        List<CAUser> allUsers = getAllUsers();
+        //load all vertexes first
+        for(CAUser user : allUsers) {
+            graph.addVertex(user.getId());
+        }
+        //now load all edges
+        for(CAUser user : allUsers) {
+            Set<CAUser> friends = user.getFriends();
+            for(CAUser friend : friends) {
+                graph.addEdge(user.getId(), friend.getId());
+            }
+        }
+        LabelPropagationClustering<Integer, DefaultEdge> clustering = new LabelPropagationClustering<>(graph);
+        List<Set<Integer>> communities  = clustering.getClustering().getClusters();
+        FriendActionResponse response = new FriendActionResponse(FriendActionResponse.ACTION_DETECT_COMMUNITIES, true, "all good");
+        response.setObject(communities);
+        return response;
     }
 
     public FriendActionResponse countHops(Integer userId1, Integer userId2) {

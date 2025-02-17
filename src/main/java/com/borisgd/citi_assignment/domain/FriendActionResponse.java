@@ -5,10 +5,12 @@ public class FriendActionResponse {
     public final static String ACTION_ADD = "Add";
     public final static String ACTION_DELETE = "Delete";
     public final static String ACTION_COUNT_HOPS = "Count Hops";
+    public final static String ACTION_DETECT_COMMUNITIES = "Detect Communities";
 
     private String action;
     private boolean success;
     private String message;
+    private Object object;
 
     public FriendActionResponse(String action, boolean success, String message) {
         this.action = action;
@@ -38,5 +40,13 @@ public class FriendActionResponse {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public Object getObject() {
+        return object;
+    }
+
+    public void setObject(Object object) {
+        this.object = object;
     }
 }
