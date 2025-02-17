@@ -6,6 +6,7 @@ public class FriendActionResponse {
     public final static String ACTION_DELETE = "Delete";
     public final static String ACTION_COUNT_HOPS = "Count Hops";
     public final static String ACTION_DETECT_COMMUNITIES = "Detect Communities";
+    public final static String ACTION_CALCULATE_CENTRALITY = "Calculate Centrality";
 
     private String action;
     private boolean success;

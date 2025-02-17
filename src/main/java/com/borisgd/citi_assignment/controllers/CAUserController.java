@@ -21,6 +21,11 @@ public class CAUserController {
         return caUserService.detectCommunities();
     }
 
+    @GetMapping("/centrality")
+    public FriendActionResponse calculateCentrality() {
+        return caUserService.calculateCentrality();
+    }
+
     @GetMapping("/hops/{userId1}/{userId2}")
     public FriendActionResponse countHops(@PathVariable Integer userId1, @PathVariable Integer userId2) {
         return caUserService.countHops(userId1, userId2);

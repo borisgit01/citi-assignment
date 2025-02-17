@@ -38,14 +38,24 @@ public class CAUserService {
         caUserRepository.deleteById(id);
     }
 
+    public FriendActionResponse calculateCentrality() {
+        Map<Integer, Integer> centrality = new HashMap<>();
+        List<CAUser> allUsers = getAllUsers();
+        for(CAUser user : allUsers) {
+            centrality.put(user.getId(), user.getFriends().size());
+        }
+        FriendActionResponse response = new FriendActionResponse(FriendActionResponse.ACTION_CALCULATE_CENTRALITY,
+                true, "");
+        response.setObject(centrality);
+        return response;
+    }
+
     public FriendActionResponse detectCommunities() {
         Graph<Integer, DefaultEdge> graph = new DefaultUndirectedGraph<>(DefaultEdge.class);
         List<CAUser> allUsers = getAllUsers();
-        //load all vertexes first
         for(CAUser user : allUsers) {
             graph.addVertex(user.getId());
         }
-        //now load all edges
         for(CAUser user : allUsers) {
             Set<CAUser> friends = user.getFriends();
             for(CAUser friend : friends) {
